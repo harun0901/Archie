@@ -1,229 +1,70 @@
 // SPDX-License-Identifier: Unlicensed
 
- pragma solidity ^0.6.12;
+ pragma solidity 0.8.9;
  
  interface IERC20 {
  
      function totalSupply() external view returns (uint256);
  
-     /**
-      * @dev Returns the amount of tokens owned by `account`.
-      */
      function balanceOf(address account) external view returns (uint256);
- 
-     /**
-      * @dev Moves `amount` tokens from the caller's account to `recipient`.
-      *
-      * Returns a boolean value indicating whether the operation succeeded.
-      *
-      * Emits a {Transfer} event.
-      */
+
      function transfer(address recipient, uint256 amount) external returns (bool);
  
-     /**
-      * @dev Returns the remaining number of tokens that `spender` will be
-      * allowed to spend on behalf of `owner` through {transferFrom}. This is
-      * zero by default.
-      *
-      * This value changes when {approve} or {transferFrom} are called.
-      */
      function allowance(address owner, address spender) external view returns (uint256);
- 
-     /**
-      * @dev Sets `amount` as the allowance of `spender` over the caller's tokens.
-      *
-      * Returns a boolean value indicating whether the operation succeeded.
-      *
-      * IMPORTANT: Beware that changing an allowance with this method brings the risk
-      * that someone may use both the old and the new allowance by unfortunate
-      * transaction ordering. One possible solution to mitigate this race
-      * condition is to first reduce the spender's allowance to 0 and set the
-      * desired value afterwards:
-      * https://github.com/ethereum/EIPs/issues/20#issuecomment-263524729
-      *
-      * Emits an {Approval} event.
-      */
+
      function approve(address spender, uint256 amount) external returns (bool);
- 
-     /**
-      * @dev Moves `amount` tokens from `sender` to `recipient` using the
-      * allowance mechanism. `amount` is then deducted from the caller's
-      * allowance.
-      *
-      * Returns a boolean value indicating whether the operation succeeded.
-      *
-      * Emits a {Transfer} event.
-      */
+
      function transferFrom(address sender, address recipient, uint256 amount) external returns (bool);
- 
-     /**
-      * @dev Emitted when `value` tokens are moved from one account (`from`) to
-      * another (`to`).
-      *
-      * Note that `value` may be zero.
-      */
+
      event Transfer(address indexed from, address indexed to, uint256 value);
- 
-     /**
-      * @dev Emitted when the allowance of a `spender` for an `owner` is set by
-      * a call to {approve}. `value` is the new allowance.
-      */
+
      event Approval(address indexed owner, address indexed spender, uint256 value);
  }
- 
- 
- 
- /**
-  * @dev Wrappers over Solidity's arithmetic operations with added overflow
-  * checks.
-  *
-  * Arithmetic operations in Solidity wrap on overflow. This can easily result
-  * in bugs, because programmers usually assume that an overflow raises an
-  * error, which is the standard behavior in high level programming languages.
-  * `SafeMath` restores this intuition by reverting the transaction when an
-  * operation overflows.
-  *
-  * Using this library instead of the unchecked operations eliminates an entire
-  * class of bugs, so it's recommended to use it always.
-  */
   
  library SafeMath {
-     /**
-      * @dev Returns the addition of two unsigned integers, reverting on
-      * overflow.
-      *
-      * Counterpart to Solidity's `+` operator.
-      *
-      * Requirements:
-      *
-      * - Addition cannot overflow.
-      */
+
      function add(uint256 a, uint256 b) internal pure returns (uint256) {
          uint256 c = a + b;
-         require(c >= a, "SafeMath: addition overflow");
- 
+         require(c >= a, "SafeMath: addition overflow"); 
          return c;
      }
- 
-     /**
-      * @dev Returns the subtraction of two unsigned integers, reverting on
-      * overflow (when the result is negative).
-      *
-      * Counterpart to Solidity's `-` operator.
-      *
-      * Requirements:
-      *
-      * - Subtraction cannot overflow.
-      */
+
      function sub(uint256 a, uint256 b) internal pure returns (uint256) {
          return sub(a, b, "SafeMath: subtraction overflow");
      }
- 
-     /**
-      * @dev Returns the subtraction of two unsigned integers, reverting with custom message on
-      * overflow (when the result is negative).
-      *
-      * Counterpart to Solidity's `-` operator.
-      *
-      * Requirements:
-      *
-      * - Subtraction cannot overflow.
-      */
+
      function sub(uint256 a, uint256 b, string memory errorMessage) internal pure returns (uint256) {
          require(b <= a, errorMessage);
-         uint256 c = a - b;
- 
+         uint256 c = a - b; 
          return c;
      }
- 
-     /**
-      * @dev Returns the multiplication of two unsigned integers, reverting on
-      * overflow.
-      *
-      * Counterpart to Solidity's `*` operator.
-      *
-      * Requirements:
-      *
-      * - Multiplication cannot overflow.
-      */
+
      function mul(uint256 a, uint256 b) internal pure returns (uint256) {
-         // Gas optimization: this is cheaper than requiring 'a' not being zero, but the
-         // benefit is lost if 'b' is also tested.
-         // See: https://github.com/OpenZeppelin/openzeppelin-contracts/pull/522
+
          if (a == 0) {
              return 0;
          }
- 
+
          uint256 c = a * b;
          require(c / a == b, "SafeMath: multiplication overflow");
- 
          return c;
      }
- 
-     /**
-      * @dev Returns the integer division of two unsigned integers. Reverts on
-      * division by zero. The result is rounded towards zero.
-      *
-      * Counterpart to Solidity's `/` operator. Note: this function uses a
-      * `revert` opcode (which leaves remaining gas untouched) while Solidity
-      * uses an invalid opcode to revert (consuming all remaining gas).
-      *
-      * Requirements:
-      *
-      * - The divisor cannot be zero.
-      */
+
      function div(uint256 a, uint256 b) internal pure returns (uint256) {
          return div(a, b, "SafeMath: division by zero");
      }
- 
-     /**
-      * @dev Returns the integer division of two unsigned integers. Reverts with custom message on
-      * division by zero. The result is rounded towards zero.
-      *
-      * Counterpart to Solidity's `/` operator. Note: this function uses a
-      * `revert` opcode (which leaves remaining gas untouched) while Solidity
-      * uses an invalid opcode to revert (consuming all remaining gas).
-      *
-      * Requirements:
-      *
-      * - The divisor cannot be zero.
-      */
+
      function div(uint256 a, uint256 b, string memory errorMessage) internal pure returns (uint256) {
          require(b > 0, errorMessage);
          uint256 c = a / b;
-         // assert(a == b * c + a % b); // There is no case in which this doesn't hold
  
          return c;
      }
- 
-     /**
-      * @dev Returns the remainder of dividing two unsigned integers. (unsigned integer modulo),
-      * Reverts when dividing by zero.
-      *
-      * Counterpart to Solidity's `%` operator. This function uses a `revert`
-      * opcode (which leaves remaining gas untouched) while Solidity uses an
-      * invalid opcode to revert (consuming all remaining gas).
-      *
-      * Requirements:
-      *
-      * - The divisor cannot be zero.
-      */
+
      function mod(uint256 a, uint256 b) internal pure returns (uint256) {
          return mod(a, b, "SafeMath: modulo by zero");
      }
- 
-     /**
-      * @dev Returns the remainder of dividing two unsigned integers. (unsigned integer modulo),
-      * Reverts with custom message when dividing by zero.
-      *
-      * Counterpart to Solidity's `%` operator. This function uses a `revert`
-      * opcode (which leaves remaining gas untouched) while Solidity uses an
-      * invalid opcode to revert (consuming all remaining gas).
-      *
-      * Requirements:
-      *
-      * - The divisor cannot be zero.
-      */
+
      function mod(uint256 a, uint256 b, string memory errorMessage) internal pure returns (uint256) {
          require(b != 0, errorMessage);
          return a % b;
@@ -236,121 +77,40 @@
      }
  
      function _msgData() internal view virtual returns (bytes memory) {
-         this; // silence state mutability warning without generating bytecode - see https://github.com/ethereum/solidity/issues/2691
+         this; 
          return msg.data;
      }
  }
- 
- 
- /**
-  * @dev Collection of functions related to the address type
-  */
+
  library Address {
-     /**
-      * @dev Returns true if `account` is a contract.
-      *
-      * [IMPORTANT]
-      * ====
-      * It is unsafe to assume that an address for which this function returns
-      * false is an externally-owned account (EOA) and not a contract.
-      *
-      * Among others, `isContract` will return false for the following
-      * types of addresses:
-      *
-      *  - an externally-owned account
-      *  - a contract in construction
-      *  - an address where a contract will be created
-      *  - an address where a contract lived, but was destroyed
-      * ====
-      */
+
      function isContract(address account) internal view returns (bool) {
-         // According to EIP-1052, 0x0 is the value returned for not-yet created accounts
-         // and 0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470 is returned
-         // for accounts without code, i.e. `keccak256('')`
+
          bytes32 codehash;
          bytes32 accountHash = 0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470;
-         // solhint-disable-next-line no-inline-assembly
          assembly { codehash := extcodehash(account) }
          return (codehash != accountHash && codehash != 0x0);
      }
- 
-     /**
-      * @dev Replacement for Solidity's `transfer`: sends `amount` wei to
-      * `recipient`, forwarding all available gas and reverting on errors.
-      *
-      * https://eips.ethereum.org/EIPS/eip-1884[EIP1884] increases the gas cost
-      * of certain opcodes, possibly making contracts go over the 2300 gas limit
-      * imposed by `transfer`, making them unable to receive funds via
-      * `transfer`. {sendValue} removes this limitation.
-      *
-      * https://diligence.consensys.net/posts/2019/09/stop-using-soliditys-transfer-now/[Learn more].
-      *
-      * IMPORTANT: because control is transferred to `recipient`, care must be
-      * taken to not create reentrancy vulnerabilities. Consider using
-      * {ReentrancyGuard} or the
-      * https://solidity.readthedocs.io/en/v0.5.11/security-considerations.html#use-the-checks-effects-interactions-pattern[checks-effects-interactions pattern].
-      */
+
      function sendValue(address payable recipient, uint256 amount) internal {
          require(address(this).balance >= amount, "Address: insufficient balance");
  
-         // solhint-disable-next-line avoid-low-level-calls, avoid-call-value
          (bool success, ) = recipient.call{ value: amount }("");
          require(success, "Address: unable to send value, recipient may have reverted");
      }
- 
-     /**
-      * @dev Performs a Solidity function call using a low level `call`. A
-      * plain`call` is an unsafe replacement for a function call: use this
-      * function instead.
-      *
-      * If `target` reverts with a revert reason, it is bubbled up by this
-      * function (like regular Solidity function calls).
-      *
-      * Returns the raw returned data. To convert to the expected return value,
-      * use https://solidity.readthedocs.io/en/latest/units-and-global-variables.html?highlight=abi.decode#abi-encoding-and-decoding-functions[`abi.decode`].
-      *
-      * Requirements:
-      *
-      * - `target` must be a contract.
-      * - calling `target` with `data` must not revert.
-      *
-      * _Available since v3.1._
-      */
+
      function functionCall(address target, bytes memory data) internal returns (bytes memory) {
        return functionCall(target, data, "Address: low-level call failed");
      }
- 
-     /**
-      * @dev Same as {xref-Address-functionCall-address-bytes-}[`functionCall`], but with
-      * `errorMessage` as a fallback revert reason when `target` reverts.
-      *
-      * _Available since v3.1._
-      */
+
      function functionCall(address target, bytes memory data, string memory errorMessage) internal returns (bytes memory) {
          return _functionCallWithValue(target, data, 0, errorMessage);
      }
  
-     /**
-      * @dev Same as {xref-Address-functionCall-address-bytes-}[`functionCall`],
-      * but also transferring `value` wei to `target`.
-      *
-      * Requirements:
-      *
-      * - the calling contract must have an ETH balance of at least `value`.
-      * - the called Solidity function must be `payable`.
-      *
-      * _Available since v3.1._
-      */
      function functionCallWithValue(address target, bytes memory data, uint256 value) internal returns (bytes memory) {
          return functionCallWithValue(target, data, value, "Address: low-level call with value failed");
      }
- 
-     /**
-      * @dev Same as {xref-Address-functionCallWithValue-address-bytes-uint256-}[`functionCallWithValue`], but
-      * with `errorMessage` as a fallback revert reason when `target` reverts.
-      *
-      * _Available since v3.1._
-      */
+
      function functionCallWithValue(address target, bytes memory data, uint256 value, string memory errorMessage) internal returns (bytes memory) {
          require(address(this).balance >= value, "Address: insufficient balance for call");
          return _functionCallWithValue(target, data, value, errorMessage);
@@ -379,19 +139,7 @@
          }
      }
  }
- 
- /**
-  * @dev Contract module which provides a basic access control mechanism, where
-  * there is an account (an owner) that can be granted exclusive access to
-  * specific functions.
-  *
-  * By default, the owner account will be the one that deploys the contract. This
-  * can later be changed with {transferOwnership}.
-  *
-  * This module is used through inheritance. It will make available the modifier
-  * `onlyOwner`, which can be applied to your functions to restrict their use to
-  * the owner.
-  */
+
  contract Ownable is Context {
      address private _owner;
      address private _previousOwner;
@@ -466,8 +214,6 @@
      }
  }
  
- // pragma solidity >=0.5.0;
- 
  interface IUniswapV2Factory {
      event PairCreated(address indexed token0, address indexed token1, address pair, uint);
  
@@ -483,9 +229,6 @@
      function setFeeTo(address) external;
      function setFeeToSetter(address) external;
  }
- 
- 
- // pragma solidity >=0.5.0;
  
  interface IUniswapV2Pair {
      event Approval(address indexed owner, address indexed spender, uint value);
@@ -537,8 +280,6 @@
  
      function initialize(address, address) external;
  }
- 
- // pragma solidity >=0.6.2;
  
  interface IUniswapV2Router01 {
      function factory() external pure returns (address);
@@ -634,10 +375,6 @@
      function getAmountsIn(uint amountOut, address[] calldata path) external view returns (uint[] memory amounts);
  }
  
- 
- 
- // pragma solidity >=0.6.2;
- 
  interface IUniswapV2Router02 is IUniswapV2Router01 {
      function removeLiquidityETHSupportingFeeOnTransferTokens(
          address token,
@@ -680,21 +417,37 @@
  }
  
  
- contract SafeMoon is Context, IERC20, Ownable {
+ contract ArhcieInu is Context, IERC20, Ownable {
      using SafeMath for uint256;
      using Address for address;
+
+     struct privateSaleHolerData {
+        bool _isprivateSale;
+        uint256 privateSaleTimeStamp;
+        uint256 amount;
+     }
+
+     struct transactionDetailData {
+         uint256 amount;
+         uint256 timeStamp;
+     }
  
      mapping (address => uint256) private _rOwned;
      mapping (address => uint256) private _tOwned;
-     mapping (address => mapping (address => uint256)) private _allowances;
- 
+     mapping (address => mapping (address => uint256)) private _allowances; 
      mapping (address => bool) private _isExcludedFromFee;
- 
      mapping (address => bool) private _isExcluded;
      mapping (address => bool) private _isBlackList;
+     mapping (address => privateSaleHolderData) private privateSaleData;
+     mapping (address => transactionDetailData) private transactionData;
+     mapping (address => bool) public automatedMarketMakerPairs;
+
      address[] private _excluded;
-     address[] private _blackList;
-     address[] private _preSaleList;
+
+     bool _onPrivateSale = false;
+     bool _tradingActive = true;
+     bool inSwapAndLiquify;
+     bool public swapAndLiquifyEnabled = true;
     
      uint256 private constant MAX = ~uint256(0);
      uint256 private _tTotal = 10000000000000 * 10**6 * 10**18;
@@ -703,7 +456,7 @@
  
      string private _name = "Archie Inu";
      string private _symbol = "Archie";
-     uint8 private _decimals = 9;
+     uint8 private _decimals = 18;
      
      uint256 public _reflectionTax;
      uint256 public _reflectionBuyTax = 5;
@@ -715,20 +468,25 @@
 
      uint256 public _marketingTax;
      uint256 public _marketingBuyTax = 5;
-     uint256 public _marketingSellTax = 8; 
- 
-     IUniswapV2Router02 public immutable uniswapV2Router;
-     address public immutable uniswapV2Pair;
+     uint256 public _marketingSellTax = 8;
      
-     bool inSwapAndLiquify;
-     bool public swapAndLiquifyEnabled = true;          
+
+ 
+     IUniswapV2Router02 public  uniswapV2Router;
+     address public uniswapV2Pair;
 
      address public _owenerAddress = 0x233C59Ccf9cEBDeF7f80f2e04Ff2967D072aC5;
      address public _marketingAddress = 0xFe0DadD607aB0d5C5294Aa419911897E4C9a2313;
      address public _deadAdderess = 0x000000000000000000000000000000000000dead;
 
-     uint256 public _maxTxAmount = 5000000 * 10**6 * 10**18;//???????????????
-     uint256 private numTokensSellToAddToLiquidity = 500000 * 10**6 * 10**18;//????????????????
+
+     uint256 private numTokensSellToAddToLiquidity = _tTotal / 1000;
+     uint256 public _maxwalletamount = _tTotal / 200;
+     uint256 public _privateSaleTimeLimit = 90 days;//???
+     uint256 public _dailyTimeLimit = 24 hours;//????
+     uint256 public _dailymaxTxAmount = 25;
+     uint256 public _maxTxAmount = 3;
+     
      event MinTokensBeforeSwapUpdated(uint256 minTokensBeforeSwap);
      event SwapAndLiquifyEnabledUpdated(bool enabled);
      event SwapAndLiquify(
@@ -747,22 +505,22 @@
          _rOwned[_owenerAddress] = _rTotal;
          
          IUniswapV2Router02 _uniswapV2Router = IUniswapV2Router02(0x05fF2B0DB69458A0750badebc4f9e13aDd608C7F);//????????????
-          // Create a uniswap pair for this new token
+
          uniswapV2Pair = IUniswapV2Factory(_uniswapV2Router.factory())
              .createPair(address(this), _uniswapV2Router.WETH());
- 
-         // set the rest of the contract variables
+
          uniswapV2Router = _uniswapV2Router;
-         
-         //exclude owner and this contract from fee
+
          _isExcludedFromFee[_owenerAddress] = true;
          _isExcludedFromFee[address(this)] = true;
 
-         //exclude from reward
          _isExcluded[_deadAdderess] = true;
+         _isExcluded[uniswapV2Pair] = true;
          
          emit Transfer(address(0), _msgSender(), _tTotal);
      }
+
+     // ERC-20 standard functions
  
      function name() public view returns (string memory) {
          return _name;
@@ -814,6 +572,81 @@
          _approve(_msgSender(), spender, _allowances[_msgSender()][spender].sub(subtractedValue, "ERC20: decreased allowance below zero"));
          return true;
      }
+
+     function _transfer(
+        address from,
+        address to,
+        uint256 amount
+    ) internal {
+        require(from != address(0), "ERC20: transfer from the zero address");
+        require(to != address(0), "ERC20: transfer to the zero address");
+        require(amount > 0, "Transfer amount must be greater than zero");
+        require(_tradingActive, "Could not transfer Token");
+
+        if(_onPrivateSale) {
+            privateSaleData[to]._isprivateSale = true;
+            privateSaleData[to].amount = amount;
+            privateSaleData[to].privateSaleTimeStamp = block.timestamp;
+        }
+
+        if(privaresaledata[from]._isprivateSale && block.timestamp - privatesaleData[from].privateSaleTimeStamp < _privateSaleTimeLimit) {
+           require(balanceOf(from) >= privatesaledata[from].amount + amount, "privatesaleAddress only send reflection amount in 3 months");
+        }
+
+        if(from != owner() && to != owner()) {
+
+            require(amount <= _maxTxAmount, "Transfer amount exceeds the maxTxAmount.");
+            require(amount + balanceOf(to) <= _maxwalletamount, "transfer amount exceeds the maxWalletAmount.");
+
+            uint256 amountETH = amount.mul(_getRateTokenAndETH());
+
+            if (block.timestamp - transactionData[from].timestamp < _dailyTimeLimit) {
+               require(transactionData[from].amount + amountETH <= _dailymaxTxAmount, "Transfer amount exceeds the dailymaxTxAmount.");
+               transactionData[from].amount += amountETH;
+            } else {
+               transactionData[from].timestamp = block.timestamp;
+               transactionData[from].amount = amountETH;
+            }
+        }
+        
+        
+
+        // is the token balance of this contract address over the min number of
+        // tokens that we need to initiate a swap + liquidity lock?
+        // also, don't get caught in a circular liquidity event.
+        // also, don't swap & liquify if sender is uniswap pair.
+        uint256 contractTokenBalance = balanceOf(address(this));
+        
+        if(contractTokenBalance >= _maxTxAmount)
+        {
+            contractTokenBalance = _maxTxAmount;
+        }
+        
+        bool overMinTokenBalance = contractTokenBalance >= numTokensSellToAddToLiquidity;
+        if (
+            overMinTokenBalance &&
+            !inSwapAndLiquify &&
+            from != uniswapV2Pair &&
+            swapAndLiquifyEnabled
+        ) {
+            contractTokenBalance = numTokensSellToAddToLiquidity;
+            //add liquidity
+            swapAndLiquify(contractTokenBalance);
+        }
+        
+        //indicates if fee should be deducted from transfer
+        bool takeFee = true;
+        
+        //if any account belongs to _isExcludedFromFee account then remove the fee
+        if(_isExcludedFromFee[from] || _isExcludedFromFee[to]){
+            takeFee = false;
+        }
+        
+        //transfer amount, it will take tax, burn, liquidity fee
+        _tokenTransfer(from,to,amount,takeFee);
+    }
+
+
  
      function isExcludedFromReward(address account) public view returns (bool) {
          return _isExcluded[account];
@@ -1009,51 +842,7 @@
          emit Approval(owner, spender, amount);
      }
  
-     function _transfer(
-         address from,
-         address to,
-         uint256 amount
-     ) private {
-         require(from != address(0), "ERC20: transfer from the zero address");
-         require(to != address(0), "ERC20: transfer to the zero address");
-         require(amount > 0, "Transfer amount must be greater than zero");
-         if(from != owner() && to != owner())
-             require(amount <= _maxTxAmount, "Transfer amount exceeds the maxTxAmount.");
- 
-         // is the token balance of this contract address over the min number of
-         // tokens that we need to initiate a swap + liquidity lock?
-         // also, don't get caught in a circular liquidity event.
-         // also, don't swap & liquify if sender is uniswap pair.
-         uint256 contractTokenBalance = balanceOf(address(this));
-         
-         if(contractTokenBalance >= _maxTxAmount)
-         {
-             contractTokenBalance = _maxTxAmount;
-         }
-         
-         bool overMinTokenBalance = contractTokenBalance >= numTokensSellToAddToLiquidity;
-         if (
-             overMinTokenBalance &&
-             !inSwapAndLiquify &&
-             from != uniswapV2Pair &&
-             swapAndLiquifyEnabled
-         ) {
-             contractTokenBalance = numTokensSellToAddToLiquidity;
-             //add liquidity
-             swapAndLiquify(contractTokenBalance);
-         }
-         
-         //indicates if fee should be deducted from transfer
-         bool takeFee = true;
-         
-         //if any account belongs to _isExcludedFromFee account then remove the fee
-         if(_isExcludedFromFee[from] || _isExcludedFromFee[to]){
-             takeFee = false;
-         }
-         
-         //transfer amount, it will take tax, burn, liquidity fee
-         _tokenTransfer(from,to,amount,takeFee);
-     }
+
  
      function swapAndLiquify(uint256 contractTokenBalance) private lockTheSwap {
          // split the contract balance into halves
@@ -1115,13 +904,11 @@
      function _tokenTransfer(address sender, address recipient, uint256 amount,bool takeFee) private {
          if(!takeFee) {
             removeAllTax();
-         } else if (sender == uniswapV2Pair || sender == address(uniswapV2Router)) {
+         } else if (sender == uniswapV2Pair) {
              setTaxBuyTax();
-         } else if (recipient == uniswapV2Pair || recipient == address(uniswapV2Router)) {
+         } else  {
              setTaxSellTax();
-         } else {
-             removeAllTax();
-         }
+         } 
              
          
          if (_isExcluded[sender] && !_isExcluded[recipient]) {
@@ -1195,13 +982,62 @@
          return rateTokenAndETH;
      }
 
-     function setblackList(address blackAddress) public onlyOwner {
-        uint256 amount = balanceOf(blackAddress);
-        
+     function includeblackList(address sender) public onlyOwner {
+        _isBlacklist[sender] = true;        
      } 
-     
-     function setPrivateSaleList(address[] _presalelist, uint256[] amount) public onlyOnwer {
 
+     function exculdeBlackList(address account) public onlyOwner {
+         _isBlacklist[account] = false;
+     }
+
+     function setPresaleList(address account, uint256 amount) internal {
+
+     }
+
+     function burn(uint256 tBurn) external {
+ 
+         address sender = _msgSender();
+         require(sender != address(0), "ERC20: burn from the zero address");
+         require(sender != address(deadAddress), "ERC20: burn from the burn address");
+ 
+         uint256 balance = balanceOf(sender);
+         require(balance >= tBurn, "ERC20: burn amount exceeds balance");
+ 
+         uint256 rBurn = tBurn.mul(_getRate());
+ 
+         // remove the amount from the sender's balance first
+         _rOwned[sender] = _rOwned[sender].sub(rBurn);
+         
+         if (_isExcluded[sender])
+             _tOwned[sender] = _tOwned[sender].sub(tBurn);
+ 
+         _burnTokens( sender, tBurn, rBurn );
+     }
+
+     function setEnableTrading(bool tradingActive) external onlyOwner {
+        _tradingActive = tradingActive;
+
+    } 
+ 
+     /**
+      * @dev "Soft" burns the specified amount of tokens by sending them
+      * to the burn address
+      */
+     function _burnTokens(address sender, uint256 tBurn, uint256 rBurn) internal {
+ 
+         /**
+          * @dev Do not reduce _totalSupply and/or _reflectedSupply. (soft) burning by sending
+          * tokens to the burn address (which should be excluded from rewards) is sufficient
+          * in FleetRewards
+          */
+         _rOwned[deadAddress] = _rOwned[deadAddress].add(rBurn);
+         if (_isExcluded[deadAddress])
+             _tBurn[deadAddress] = _tBurn[deadAddress].add(tBurn);
+ 
+         /**
+          * @dev Emit the event so that the burn address balance is updated (on bscscan)
+          */
+         emit Transfer(sender, deadAddress, tBurn);
      }
  
  }
