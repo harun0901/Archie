@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 
 pragma solidity ^0.8.0;
-
+ 
 /*
  * @dev Provides information about the current execution context, including the
  * sender of the transaction and its data. While these are generally available
@@ -746,7 +746,7 @@ interface IRandomNumberGenerator {
     function viewRandomResult() external view returns (uint32);
 }
 
-interface IPancakeSwapLottery {
+interface IArchieLottery {
     /**
      * @notice Buy tickets for the current lottery
      * @param _lotteryId: lotteryId
@@ -776,7 +776,7 @@ interface IPancakeSwapLottery {
     function closeLottery(uint256 _lotteryId) external;
 
     /**
-     * @notice Draw the final number, calculate reward in CAKE per group, and make lottery claimable
+     * @notice Draw the final number, calculate reward in ARCHIE per group, and make lottery claimable
      * @param _lotteryId: lottery id
      * @param _autoInjection: reinjects funds into next lottery (vs. withdrawing all)
      * @dev Callable by operator
@@ -786,7 +786,7 @@ interface IPancakeSwapLottery {
     /**
      * @notice Inject funds
      * @param _lotteryId: lottery id
-     * @param _amount: amount to inject in CAKE token
+     * @param _amount: amount to inject in ARCHIE token
      * @dev Callable by operator
      */
     function injectFunds(uint256 _lotteryId, uint256 _amount) external;
@@ -795,14 +795,14 @@ interface IPancakeSwapLottery {
      * @notice Start the lottery
      * @dev Callable by operator
      * @param _endTime: endTime of the lottery
-     * @param _priceTicketInCake: price of a ticket in CAKE
+     * @param _priceTicketInArchie: price of a ticket in ARCHIE
      * @param _discountDivisor: the divisor to calculate the discount magnitude for bulks
      * @param _rewardsBreakdown: breakdown of rewards per bracket (must sum to 10,000)
      * @param _treasuryFee: treasury fee (10,000 = 100%, 100 = 1%)
      */
     function startLottery(
         uint256 _endTime,
-        uint256 _priceTicketInCake,
+        uint256 _priceTicketInArchie,
         uint256 _discountDivisor,
         uint256[6] calldata _rewardsBreakdown,
         uint256 _treasuryFee
@@ -817,7 +817,7 @@ interface IPancakeSwapLottery {
 contract RandomNumberGenerator is VRFConsumerBase, IRandomNumberGenerator, Ownable {
     using SafeERC20 for IERC20;
 
-    address public pancakeSwapLottery;
+    address public archieLottery;
     bytes32 public keyHash;
     bytes32 public latestRequestId;
     uint32 public randomResult;
@@ -838,10 +838,10 @@ contract RandomNumberGenerator is VRFConsumerBase, IRandomNumberGenerator, Ownab
 
     /**
      * @notice Request randomness from a user-provided seed
-     * @param _seed: seed provided by the PancakeSwap lottery
+     * @param _seed: seed provided by the Archie lottery
      */
     function getRandomNumber(uint256 _seed) external override {
-        require(msg.sender == pancakeSwapLottery, "Only PancakeSwapLottery");
+        require(msg.sender == archieLottery, "Only ArchieLottery");
         require(keyHash != bytes32(0), "Must have valid key hash");
         require(LINK.balanceOf(address(this)) >= fee, "Not enough LINK tokens");
 
@@ -865,11 +865,11 @@ contract RandomNumberGenerator is VRFConsumerBase, IRandomNumberGenerator, Ownab
     }
 
     /**
-     * @notice Set the address for the PancakeSwapLottery
-     * @param _pancakeSwapLottery: address of the PancakeSwap lottery
+     * @notice Set the address for the ArchieLottery
+     * @param _archieLottery: address of the Archie lottery
      */
-    function setLotteryAddress(address _pancakeSwapLottery) external onlyOwner {
-        pancakeSwapLottery = _pancakeSwapLottery;
+    function setLotteryAddress(address _archieLottery) external onlyOwner {
+        archieLottery = _archieLottery;
     }
 
     /**
@@ -902,6 +902,6 @@ contract RandomNumberGenerator is VRFConsumerBase, IRandomNumberGenerator, Ownab
     function fulfillRandomness(bytes32 requestId, uint256 randomness) internal override {
         require(latestRequestId == requestId, "Wrong requestId");
         randomResult = uint32(1000000 + (randomness % 1000000));
-        latestLotteryId = IPancakeSwapLottery(pancakeSwapLottery).viewCurrentLotteryId();
+        latestLotteryId = IArchieLottery(archieLottery).viewCurrentLotteryId();
     }
 }
